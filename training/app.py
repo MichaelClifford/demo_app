@@ -4,6 +4,7 @@ import pandas as pd
 import joblib
 import boto3
 import os
+import io
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
