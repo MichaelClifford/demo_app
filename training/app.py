@@ -24,13 +24,16 @@ from sklearn.manifold import TSNE
 
 ## Connect to s3
 
+my_bucket = "MICHAEL-DATA-ODSC"
 conn = boto3.client(service_name='s3',
         aws_access_key_id= os.environ.get("AWS_ACCESS_KEY_ID")  ,
         aws_secret_access_key= os.environ.get("AWS_SECRET_ACCESS_KEY"),
-        endpoint_url= 'https://s3.upshift.redhat.com/')
+        endpoint_url= os.environ.get("S3_ENDPOINT_URL"))
 
 # Read in Data from S3
-df = pd.read_csv('creditcard.csv')
+
+obj = conn.get_object(Bucket=my_bucket, Key='demo-data/creditcard.csv')
+df = pd.read_csv(io.BytesIO(obj['Body'].read()))
 
 # Pre-process
 
@@ -55,5 +58,3 @@ file  = "model.pkl"
 
 conn.upload_file(Bucket=my_bucket, Key=key, Filename=file)
 conn.list_objects(Bucket=my_bucket)
-
-
